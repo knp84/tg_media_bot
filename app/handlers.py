@@ -7,7 +7,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def send_welcome(message: Message):
-   await message.answer("Начало работы \nВышлите мне изображение ваших оценок", reply_markup=main)
+   await message.answer("Начало работы \nВышлите мне изображение ваших оценок")
 
 @router.message(F.photo)
 async def dowload_photo(message: Message, bot: Bot):
