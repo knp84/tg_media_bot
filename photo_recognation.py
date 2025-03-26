@@ -1,5 +1,6 @@
 from PIL import Image
 import pytesseract
+from app.handlers import file_name
 
 pytesseract.pytesseract.tesseract_cmd = r'D:\Pyton310\Project\venv\Lib\TES\tesseract.exe'
 
@@ -7,7 +8,7 @@ def ocr_core(filename):
     text = pytesseract.image_to_string(Image.open(filename))  
     return text
 
-s = ocr_core('score.jpg')
+s = ocr_core(file_name)
 
 sum_score = 0
 count_score = 0
