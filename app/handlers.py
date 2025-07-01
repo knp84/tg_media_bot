@@ -1,14 +1,26 @@
 from aiogram import  Router, F, Bot
 from aiogram.types import Message
 from aiogram.filters import CommandStart
+
 from io import BytesIO
+from io import BytesIO
+
 from PIL import Image
 import pytesseract
-from io import BytesIO
+
+from re import sub
+from math import ceil
+
 
 def ocr_core(filename):
     text = pytesseract.image_to_string(Image.open(BytesIO(filename)))  
     return text
+
+def calculate_required_grades(total_score, count, target_avg, added_grade):
+    required = (target_avg * count - total_score) / (added_grade - target_avg)
+    n = max(0, ceil(required))
+    new_avg = (total_score + added_grade * n) / (count + n)
+    return n, round(new_avg, 2)
 
 pytesseract.pytesseract.tesseract_cmd = r'D:\Pyton310\Project\venv\Lib\TES\tesseract.exe'
 
@@ -29,46 +41,46 @@ async def photo_message(message: Message, bot: Bot):
         await bot.download(message.photo[-1], destination=file_name)
         with open(file_name, 'rb') as f:
             image_bytes = f.read()
-        s = ocr_core(image_bytes)
+        digit = sub(r'\D', '' ,ocr_core(image_bytes))
+        digit = [int(i) for i in digit]
 
-        sum_score = 0
-        count_score = 0
+    
 
-        for i in range(len(s.strip('\n'))):
-            sum_score += int(s[i])
-            count_score += 1
+    count_score, sum_score = int(len(digit)), sum(digit)
 
-        avr_score = sum_score / count_score
+    avr_score = sum_score / count_score
+
     await message.reply(f'ваш средний балл {round(avr_score, 3)}\nКакую оценку вы хотите за четверть?(Введите цифру)')
     
     
 @router.message(F.text)
 async def having_grade(message: Message):
 
-    if message.text == '4':
-        if 4.5 > avr_score >= 3.5:
-            await message.answer('У вас уже 4 или 5')
-        else:
-            count_score_5 = count_score_4 = avr_score_5 = avr_score_4 = 0
-            sum_score_5 = sum_score_4 = sum_score
-            while avr_score_5 < 3.5:
-                sum_score_5 += 5
-                count_score_5 += 1
-                avr_score_5 = sum_score_5 / (count_score_5 + count_score)
-            while avr_score_4 < 3.5:
-                sum_score_4 += 4
-                count_score_4 += 1
-                avr_score_4 = sum_score_4 / (count_score_4 + count_score)
-            await message.answer(f'До {round(avr_score_4, 3)} вам нужно {count_score_5} "5" или {count_score_4} "4"')
-    elif message.text == '5':
+    if message.text == '5':
         if avr_score >= 4.5:
             await message.answer('У вас уже 5')
         else:
-            sum_score_5_2 = sum_score
-            count_score_5_2 = avr_score_5_2 = 0
-            while avr_score_5_2 < 4.5:
-                sum_score_5_2 += 5
-                count_score_5_2 += 1
-                avr_score_5_2 = sum_score_5_2 / (count_score_5_2 + count_score)
-            await message.answer(f'До {round(avr_score_5_2, 3)} вам осталось {count_score_5_2} "5"')
-
+            n5, avg5 = calculate_required_grades(sum_score, count_score, 4.5, 5)
+            await message.answer(f'Требуется {n5} пятёрок → средний {avg5}')
+    elif message.text == 4:
+        if avr_score >= 3.5:
+            await message.answer('У вас уже оценка 4 или выше')
+        else:
+            n5, avg5 = calculate_required_grades(sum_score, count_score, 3.5, 5)
+            n4, avg4 = calculate_required_grades(sum_score, count_score, 3.5, 4)
+            
+            await message.answer('Чтобы достичь среднего балла:')
+            await message.answer(f'- Пятёрки: {n5} шт. → средний {avg4}')
+            await message.answer(f'- Четвёрки: {n4} шт. → средний {avg5}')
+    elif message.text == 3:
+        if avr_score >= 2.5:
+            print('У вас уже оцека 3 или больше')
+        else:
+            n5, avg5 = calculate_required_grades(sum_score, count_score, 2.5, 5)
+            n4, avg4 = calculate_required_grades(sum_score, count_score, 2.5, 4)
+            n3, avg3 = calculate_required_grades(sum_score, count_score, 2.5, 3)
+    
+            await message.answer('Чтобы достичь среднего балла:')
+            await message.answer(f'- Пятёрки: {n5} шт. → средний {avg5}')
+            await message.answer(f'- Четвёрки: {n4} шт. → средний {avg4}')
+            await message.answer(f'- Тройки: {n3} шт. → средний {avg3}')
