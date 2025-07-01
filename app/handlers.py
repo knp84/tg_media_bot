@@ -41,10 +41,11 @@ async def photo_message(message: Message, bot: Bot):
         await bot.download(message.photo[-1], destination=file_name)
         with open(file_name, 'rb') as f:
             image_bytes = f.read()
+        
         digit = sub(r'\D', '' ,ocr_core(image_bytes))
         digit = [int(i) for i in digit]
 
-    
+    print(digit)
 
     count_score, sum_score = int(len(digit)), sum(digit)
 
@@ -62,7 +63,7 @@ async def having_grade(message: Message):
         else:
             n5, avg5 = calculate_required_grades(sum_score, count_score, 4.5, 5)
             await message.answer(f'Требуется {n5} пятёрок ➡️  средний {avg5}')
-    elif message.text == 4:
+    elif message.text == '4':
         if avr_score >= 3.5:
             await message.answer('У вас уже оценка 4 или выше')
         else:
@@ -72,9 +73,9 @@ async def having_grade(message: Message):
             await message.answer('Чтобы достичь среднего балла:')
             await message.answer(f'- Пятёрки: {n5} шт. ➡️  средний {avg4}')
             await message.answer(f'- Четвёрки: {n4} шт. ➡️  средний {avg5}')
-    elif message.text == 3:
+    elif message.text == '3':
         if avr_score >= 2.5:
-            print('У вас уже оцека 3 или больше')
+            await message.answer('У вас уже оцека 3 или больше')
         else:
             n5, avg5 = calculate_required_grades(sum_score, count_score, 2.5, 5)
             n4, avg4 = calculate_required_grades(sum_score, count_score, 2.5, 4)
