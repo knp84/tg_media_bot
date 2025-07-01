@@ -61,7 +61,7 @@ async def having_grade(message: Message):
             await message.answer('У вас уже 5')
         else:
             n5, avg5 = calculate_required_grades(sum_score, count_score, 4.5, 5)
-            await message.answer(f'Требуется {n5} пятёрок → средний {avg5}')
+            await message.answer(f'Требуется {n5} пятёрок ➡️  средний {avg5}')
     elif message.text == 4:
         if avr_score >= 3.5:
             await message.answer('У вас уже оценка 4 или выше')
@@ -70,8 +70,8 @@ async def having_grade(message: Message):
             n4, avg4 = calculate_required_grades(sum_score, count_score, 3.5, 4)
             
             await message.answer('Чтобы достичь среднего балла:')
-            await message.answer(f'- Пятёрки: {n5} шт. → средний {avg4}')
-            await message.answer(f'- Четвёрки: {n4} шт. → средний {avg5}')
+            await message.answer(f'- Пятёрки: {n5} шт. ➡️  средний {avg4}')
+            await message.answer(f'- Четвёрки: {n4} шт. ➡️  средний {avg5}')
     elif message.text == 3:
         if avr_score >= 2.5:
             print('У вас уже оцека 3 или больше')
@@ -81,6 +81,6 @@ async def having_grade(message: Message):
             n3, avg3 = calculate_required_grades(sum_score, count_score, 2.5, 3)
     
             await message.answer('Чтобы достичь среднего балла:')
-            await message.answer(f'- Пятёрки: {n5} шт. → средний {avg5}')
-            await message.answer(f'- Четвёрки: {n4} шт. → средний {avg4}')
-            await message.answer(f'- Тройки: {n3} шт. → средний {avg3}')
+            await message.answer(f'- Пятёрки: {n5} шт. ➡️  средний {avg5}')
+            await message.answer(f'- Четвёрки: {n4} шт. ➡️  средний {avg4}')
+            await message.answer(f'- Тройки: {n3} шт. ➡️  средний {avg3}')
