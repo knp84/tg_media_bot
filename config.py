@@ -1,1 +1,8 @@
-API_TOKEN = '8172446839:AAF_ui4F02qdP0w4WAzEzgo56fATYxM5tbE'
+import os
+
+API_TOKEN = str(os.getenv('API_TOKEN'))
+
+PGUSER = str(os.getenv('PGUSER'))
+PGPASSWORD = str(os.getenv('PGPASSWORD'))
+ip = os.getenv('ip')
+DATABASE = str(os.getenv('DATABASE'))
